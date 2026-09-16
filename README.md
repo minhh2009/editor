@@ -1,0 +1,1 @@
+A simple editor, written in Python

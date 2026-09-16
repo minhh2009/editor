@@ -1,0 +1,410 @@
+{
+    "languages": {
+        "python": {
+            "identifier": "[A-Za-z_][A-Za-z0-9_]*",
+
+            "number": "(?:0[xX][0-9a-fA-F]+|0[bB][01]+|0[oO][0-7]+|(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?)",
+
+            "keywords": [
+                "and",
+                "as",
+                "assert",
+                "async",
+                "await",
+                "break",
+                "case",
+                "class",
+                "continue",
+                "def",
+                "del",
+                "elif",
+                "else",
+                "except",
+                "finally",
+                "for",
+                "from",
+                "global",
+                "if",
+                "import",
+                "in",
+                "is",
+                "lambda",
+                "match",
+                "nonlocal",
+                "not",
+                "or",
+                "pass",
+                "raise",
+                "return",
+                "try",
+                "while",
+                "with",
+                "yield"
+            ],
+
+            "builtins": [
+                "abs",
+                "all",
+                "any",
+                "bool",
+                "bytes",
+                "callable",
+                "chr",
+                "dict",
+                "dir",
+                "enumerate",
+                "eval",
+                "filter",
+                "float",
+                "format",
+                "frozenset",
+                "getattr",
+                "hasattr",
+                "hash",
+                "input",
+                "int",
+                "isinstance",
+                "iter",
+                "len",
+                "list",
+                "map",
+                "max",
+                "min",
+                "next",
+                "object",
+                "open",
+                "ord",
+                "pow",
+                "print",
+                "range",
+                "repr",
+                "reversed",
+                "round",
+                "set",
+                "slice",
+                "sorted",
+                "str",
+                "sum",
+                "super",
+                "tuple",
+                "type",
+                "vars",
+                "zip"
+            ],
+
+            "constants": [
+                "True",
+                "False",
+                "None",
+                "NotImplemented",
+                "Ellipsis"
+            ],
+
+            "line_comments": [
+                "#"
+            ],
+
+            "block_comments": [],
+
+            "strings": [
+                {
+                    "quotes": [
+                        "\"\"\"",
+                        "'''",
+                        "\"",
+                        "'"
+                    ],
+                    "prefixes": [
+                        "",
+                        "r",
+                        "u",
+                        "b",
+                        "f",
+                        "br",
+                        "rb",
+                        "fr",
+                        "rf"
+                    ],
+                    "escape": "\\"
+                }
+            ],
+
+            "operators": [
+                "**=",
+                "//=",
+                "==",
+                "!=",
+                "<=",
+                ">=",
+                "**",
+                "//",
+                "->",
+                ":=",
+                "<<",
+                ">>",
+                "+=",
+                "-=",
+                "*=",
+                "/=",
+                "%=",
+                "&=",
+                "|=",
+                "^=",
+                "+",
+                "-",
+                "*",
+                "/",
+                "%",
+                "=",
+                "<",
+                ">",
+                "&",
+                "|",
+                "^",
+                "~",
+                ":",
+                ",",
+                ".",
+                ";",
+                "(",
+                ")",
+                "[",
+                "]",
+                "{",
+                "}"
+            ],
+
+            "function": {
+                "definition_keywords": [
+                    "def"
+                ],
+                "highlight_calls": true
+            },
+
+            "class": {
+                "definition_keywords": [
+                    "class"
+                ]
+            },
+
+            "preprocessor": []
+        },
+
+        "cpp": {
+            "identifier": "[A-Za-z_][A-Za-z0-9_]*",
+
+            "number": "(?:0[xX][0-9a-fA-F]+|0[bB][01]+|0[0-7]+|(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?)",
+
+            "keywords": [
+                "alignas",
+                "alignof",
+                "and",
+                "asm",
+                "auto",
+                "bitand",
+                "bitor",
+                "bool",
+                "break",
+                "case",
+                "catch",
+                "char",
+                "class",
+                "compl",
+                "concept",
+                "const",
+                "consteval",
+                "constexpr",
+                "constinit",
+                "const_cast",
+                "continue",
+                "co_await",
+                "co_return",
+                "co_yield",
+                "decltype",
+                "default",
+                "delete",
+                "do",
+                "double",
+                "dynamic_cast",
+                "else",
+                "enum",
+                "explicit",
+                "export",
+                "extern",
+                "false",
+                "float",
+                "for",
+                "friend",
+                "goto",
+                "if",
+                "inline",
+                "int",
+                "long",
+                "mutable",
+                "namespace",
+                "new",
+                "noexcept",
+                "not",
+                "nullptr",
+                "operator",
+                "or",
+                "private",
+                "protected",
+                "public",
+                "register",
+                "reinterpret_cast",
+                "requires",
+                "return",
+                "short",
+                "signed",
+                "sizeof",
+                "static",
+                "static_assert",
+                "static_cast",
+                "struct",
+                "switch",
+                "template",
+                "this",
+                "thread_local",
+                "throw",
+                "true",
+                "try",
+                "typedef",
+                "typeid",
+                "typename",
+                "union",
+                "unsigned",
+                "using",
+                "virtual",
+                "void",
+                "volatile",
+                "wchar_t",
+                "while",
+                "xor"
+            ],
+
+            "builtins": [
+                "cin",
+                "cout",
+                "cerr",
+                "clog",
+                "endl",
+                "string",
+                "vector",
+                "array",
+                "map",
+                "unordered_map",
+                "set",
+                "unordered_set",
+                "queue",
+                "priority_queue",
+                "deque",
+                "list",
+                "stack",
+                "pair",
+                "tuple",
+                "optional",
+                "variant",
+                "function",
+                "unique_ptr",
+                "shared_ptr",
+                "weak_ptr",
+                "size_t",
+                "nullptr_t"
+            ],
+
+            "constants": [
+                "true",
+                "false",
+                "nullptr"
+            ],
+
+            "line_comments": [
+                "//"
+            ],
+
+            "block_comments": [
+                {
+                    "start": "/*",
+                    "end": "*/"
+                }
+            ],
+
+            "strings": [
+                {
+                    "quotes": [
+                        "\"",
+                        "'"
+                    ],
+                    "prefixes": [
+                        ""
+                    ],
+                    "escape": "\\"
+                }
+            ],
+
+            "operators": [
+                "==",
+                "!=",
+                "<=",
+                ">=",
+                "->",
+                "::",
+                "++",
+                "--",
+                "&&",
+                "||",
+                "+=",
+                "-=",
+                "*=",
+                "/=",
+                "%=",
+                "&=",
+                "|=",
+                "^=",
+                "<<",
+                ">>",
+                "+",
+                "-",
+                "*",
+                "/",
+                "%",
+                "=",
+                "<",
+                ">",
+                "&",
+                "|",
+                "^",
+                "~",
+                "!",
+                "?",
+                ":",
+                ",",
+                ".",
+                ";",
+                "(",
+                ")",
+                "[",
+                "]",
+                "{",
+                "}"
+            ],
+
+            "function": {
+                "definition_keywords": [],
+                "highlight_calls": true
+            },
+
+            "class": {
+                "definition_keywords": [
+                    "class",
+                    "struct"
+                ]
+            },
+
+            "preprocessor": [
+                "#"
+            ]
+        }
+    }
+}
