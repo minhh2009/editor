@@ -1,9 +1,11 @@
 from pathlib import Path
 import json
 
-from PySide6.QtCore import Qt, QRect
+import re
+
+from PySide6.QtCore import Qt, QRect, QStringListModel
 from PySide6.QtGui import QColor, QFont, QPainter, QTextCursor, QTextFormat, QKeyEvent
-from PySide6.QtWidgets import QPlainTextEdit, QTextEdit
+from PySide6.QtWidgets import QCompleter, QPlainTextEdit, QTextEdit
 
 from .line_number_area import LineNumberArea
 from .highlighter import CodeHighlighter
@@ -21,8 +23,10 @@ class CodeEditor(QPlainTextEdit):
         self.blockCountChanged.connect(self.update_line_number_area_width)
         self.updateRequest.connect(self.update_line_number_area)
         self.cursorPositionChanged.connect(self._cursor_changed)
+        self.textChanged.connect(self._refresh_completions)
         self._setup()
         self.highlighter = CodeHighlighter(self.document(), language, theme_file, languages_file)
+        self._setup_completer()
         self.update_line_number_area_width(0)
         self._cursor_changed()
 
@@ -62,6 +66,71 @@ class CodeEditor(QPlainTextEdit):
         self.config = self.languages[language]
         self.indent_size = self.config.get("indent_size", 4)
         self.highlighter.set_language(language)
+        self._refresh_completions()
+
+    def _setup_completer(self):
+        self._completion_model = QStringListModel(self)
+        self._completer = QCompleter(self._completion_model, self)
+        self._completer.setWidget(self)
+        self._completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+        self._completer.setCaseSensitivity(Qt.CaseSensitivity.CaseSensitive)
+        popup = self._completer.popup()
+        popup.setFixedWidth(300)
+        popup.setMaximumHeight(200)
+        self._completer.activated.connect(self._insert_completion)
+
+    def _completion_prefix(self):
+        text = self.textCursor().block().text()
+        position = self.textCursor().positionInBlock()
+        identifier = self.config.get("identifier", r"[A-Za-z_][A-Za-z0-9_]*")
+        match = re.search(rf"({identifier})$", text[:position])
+        return match.group(1) if match else ""
+
+    def _completion_words(self):
+        identifier = self.config.get("identifier", r"[A-Za-z_][A-Za-z0-9_]*")
+        pattern = re.compile(identifier)
+        words = {match.group(0) for match in pattern.finditer(self.toPlainText())}
+
+        for key in ("keywords", "builtins", "constants"):
+            words.update(word for word in self.config.get(key, []) if pattern.fullmatch(word))
+
+        return sorted(words, key=str.casefold)
+
+    def _refresh_completions(self):
+        if not hasattr(self, "_completion_model"):
+            return
+
+        self._completion_model.setStringList(self._completion_words())
+        prefix = self._completion_prefix()
+        if not prefix:
+            self._completer.popup().hide()
+            return
+
+        self._completer.setCompletionPrefix(prefix)
+        if self._completer.completionCount():
+            self._completer.complete(self.cursorRect())
+        else:
+            self._completer.popup().hide()
+
+    def _show_completions(self):
+        self._refresh_completions()
+        if not self._completion_model.stringList():
+            return
+        self._completer.setCompletionPrefix(self._completion_prefix())
+        self._completer.complete(self.cursorRect())
+
+    def _insert_completion(self, completion):
+        prefix = self._completion_prefix()
+        if not prefix:
+            return
+        c = self.textCursor()
+        c.movePosition(
+            QTextCursor.MoveOperation.Left,
+            QTextCursor.MoveMode.KeepAnchor,
+            len(prefix),
+        )
+        c.insertText(completion)
+        self.setTextCursor(c)
 
     def line_number_area_width(self):
         digits = len(str(max(1, self.blockCount())))
@@ -251,6 +320,20 @@ class CodeEditor(QPlainTextEdit):
         key = event.key()
         mod = event.modifiers()
         text = event.text()
+
+        if mod & Qt.KeyboardModifier.ControlModifier and key == Qt.Key.Key_Space:
+            self._show_completions()
+            return
+
+        if (
+            self._completer.popup().isVisible()
+            and key in (Qt.Key.Key_Return, Qt.Key.Key_Enter, Qt.Key.Key_Tab)
+        ):
+            current = self._completer.currentCompletion()
+            if current:
+                self._completer.popup().hide()
+                self._insert_completion(current)
+                return
 
         if key == Qt.Key.Key_Slash and mod & Qt.KeyboardModifier.ControlModifier:
             self.toggle_comment()
