@@ -146,7 +146,6 @@ class CodeEditor(QPlainTextEdit):
             self.line_number_area.update(0, rect.y(), self.line_number_area.width(), rect.height())
         if rect.contains(self.viewport().rect()):
             self.update_line_number_area_width(0)
-
     def resizeEvent(self, event):
         super().resizeEvent(event)
         r = self.contentsRect()
@@ -212,6 +211,37 @@ class CodeEditor(QPlainTextEdit):
 
     def _smart_enter(self):
         c = self.textCursor()
+        pos = c.position()
+        text = self.toPlainText()
+
+        if 0 < pos < len(text):
+            left = text[pos - 1]
+            right = text[pos]
+
+            if self._pairs().get(left) == right:
+                line = c.block().text()
+                indent = self._indent(line)
+                inner_indent = indent + " " * self.indent_size
+
+                c.insertText("\n" + inner_indent + "\n" + indent)
+
+                c.movePosition(
+                    QTextCursor.MoveOperation.Up,
+QTextCursor.MoveMode.MoveAnchor,
+                )
+                c.movePosition(
+                    QTextCursor.MoveOperation.StartOfLine,
+                    QTextCursor.MoveMode.MoveAnchor,
+                )
+                c.movePosition(
+                    QTextCursor.MoveOperation.Right,
+                    QTextCursor.MoveMode.MoveAnchor,
+                    len(inner_indent),
+                )
+
+                self.setTextCursor(c)
+                return
+
         line = c.block().text()
         level = len(self._indent(line)) // self.indent_size
 
@@ -293,7 +323,6 @@ class CodeEditor(QPlainTextEdit):
             else:
                 c.insertText(marker + " ")
         c.endEditBlock()
-
     def indent_selection(self, increase=True):
         c = self.textCursor()
         start, end = c.selectionStart(), c.selectionEnd()
